@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Header from "./Header";
 import ToyForm from "./ToyForm";
@@ -11,14 +11,22 @@ function App() {
     setShowForm((showForm) => !showForm);
   }
 
+  const [toyArr, setToyArr] = useState([])
+
+  useEffect(() => {
+    fetch('http://localhost:3001/toys')
+      .then(resp => resp.json())
+      .then(data => setToyArr(data))
+  }, [])
+  // console.log(toyArr)
   return (
     <>
       <Header />
-      {showForm ? <ToyForm /> : null}
+      {showForm ? <ToyForm toyArr={toyArr} setToyArr={setToyArr} /> : null}
       <div className="buttonContainer">
         <button onClick={handleClick}>Add a Toy</button>
       </div>
-      <ToyContainer />
+      <ToyContainer toyArr={toyArr} />
     </>
   );
 }
